@@ -12,7 +12,7 @@ export default function ProfileNavbar() {
     return (
         <Menu shadow="md" width={200}>
             <Menu.Target>
-                <Avatar color="cyan" radius="xl">MK</Avatar>
+                <Avatar color="cyan" radius="xl" style={{ cursor: 'pointer' }}>MK</Avatar>
             </Menu.Target>
 
             <Menu.Dropdown>
