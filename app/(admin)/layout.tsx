@@ -2,11 +2,10 @@
 import { AppShell, Burger, Flex, Group, NavLink, Skeleton, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { MantineLogo } from '@mantinex/mantine-logo';
-import menuConstant from '../../constants/menu.constant';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import '../../styles/app-layout.css'
 import ProfileNavbar from '../../components/MenuNavbar';
+import SidebarMenu from '../../components/SidebarMenu';
 export default function AdminLayout({ children }: { children: any }) {
     const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
     const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
@@ -34,15 +33,7 @@ export default function AdminLayout({ children }: { children: any }) {
                 </div>
             </AppShell.Header>
             <AppShell.Navbar p="md">
-                <NavLink label="MENU" disabled id='nav-menu' />
-                {menuConstant.map((item, key) => (<NavLink
-                    key={key}
-                    component={Link}
-                    href={item.link}
-                    leftSection={item.icon}
-                    label={item.name}
-                    active={pathname == item.link}
-                />))}
+                <SidebarMenu />
             </AppShell.Navbar>
             <AppShell.Main>{children}</AppShell.Main>
         </AppShell>
