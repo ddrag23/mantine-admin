@@ -1,4 +1,5 @@
-import { Card, Group, Text } from "@mantine/core"
+"use client"
+import { Card, Group, Space, Text } from "@mantine/core"
 import { ReactNode } from "react"
 
 type CardSectionProps = {
@@ -21,6 +22,7 @@ export default function CardSection({ children, withHeading = true, title, toolb
         <Card.Section inheritPadding style={{ borderBottom: '1px solid #DEE2E6' }}>
             {withHeading && <CardHeader title={title} toolbar={toolbar} toolbarChildren={toolbarChildren} />}
         </Card.Section>
+        <Space h="sm" />
         {children}
     </Card>
 }
