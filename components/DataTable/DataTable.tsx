@@ -1,6 +1,6 @@
 "use client"
 import { Children, ReactNode, useCallback, useEffect, useState } from 'react';
-import { Table, Checkbox, TableData, Loader, Pagination, Flex, Box, Skeleton } from '@mantine/core';
+import { Table, Checkbox, TableData, Loader, Pagination, Flex, Box, Skeleton, Space } from '@mantine/core';
 import { usePagination } from '@mantine/hooks';
 const elements = [] as any[];
 
@@ -13,7 +13,6 @@ type DataTableProps = {
     key: string
     serverSide?: boolean
     checkbox?: boolean
-    onContentReady?: () => void
 }
 
 export type ColumnProps = {
@@ -28,8 +27,14 @@ function LoadingTable({ length }: { length: number }) {
     </Table.Tr>
 }
 
+function EmptyData({ length }: { length: number }) {
+    return <Table.Tr>
+        <Table.Td colSpan={length} style={{ textAlign: 'center' }}>Data Not Found</Table.Td>
+    </Table.Tr>
+}
+
 export default function DataTable(props: DataTableProps): JSX.Element {
-    const { fetchUrl, dataSource = [], columns, pageSize, serverSide = false, onContentReady } = props
+    const { fetchUrl, dataSource = [], columns, pageSize, serverSide = false } = props
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
@@ -72,7 +77,9 @@ export default function DataTable(props: DataTableProps): JSX.Element {
                         </Table.Tr>
                     </Table.Thead>
                     <Table.Tbody>
-                        {loading ? <LoadingTable length={columns.length} /> : data.map((item, rowIndex) => (
+                        {loading && <LoadingTable length={columns.length} />}
+                        {!loading && data.length == 0 && <EmptyData length={columns.length} />}
+                        {!loading && data.length > 0 && data.map((item, rowIndex) => (
                             <Table.Tr key={rowIndex}>
                                 {columns.map((column, colIndex) => (
                                     <Table.Td key={colIndex}>
@@ -84,8 +91,8 @@ export default function DataTable(props: DataTableProps): JSX.Element {
                     </Table.Tbody>
                 </Table>
             </Table.ScrollContainer>
-            <Flex justify={'end'} style={{ marginTop: 10 }}>
-
+            <Space h={'sm'} />
+            <Flex justify={'end'}>
                 <Pagination total={Math.ceil(totalCount / pageSize)} onChange={setCurrentPage} />
             </Flex>
         </>
