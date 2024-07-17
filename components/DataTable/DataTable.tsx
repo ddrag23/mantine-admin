@@ -1,7 +1,8 @@
 "use client"
 import { Children, ReactNode, useCallback, useEffect, useState } from 'react';
-import { Table, Checkbox, TableData, Loader, Pagination, Flex, Box, Skeleton, Space } from '@mantine/core';
+import { Table, Checkbox, TableData, Loader, Pagination, Flex, Box, Skeleton, Space, Group, ActionIcon, Input } from '@mantine/core';
 import { usePagination } from '@mantine/hooks';
+import { IconRefresh, IconSearch } from '@tabler/icons-react';
 const elements = [] as any[];
 
 
@@ -12,7 +13,8 @@ type DataTableProps = {
     pageSize: number
     key: string
     serverSide?: boolean
-    checkbox?: boolean
+    checkbox?: boolean,
+    toolbarChildren?: ReactNode
 }
 
 export type ColumnProps = {
@@ -66,6 +68,16 @@ export default function DataTable(props: DataTableProps): JSX.Element {
 
     return (
         <>
+            <Group justify='space-between'>
+                <Input leftSection={<IconSearch />} placeholder="Search " />
+                <Group gap={'xs'}>
+                    {props.toolbarChildren && props.toolbarChildren}
+                    <ActionIcon variant="outline" aria-label="Settings">
+                        <IconRefresh style={{ width: '70%', height: '70%' }} stroke={1.5} />
+                    </ActionIcon>
+                </Group>
+            </Group>
+            <Space h={'sm'} />
             <Table.ScrollContainer minWidth={500} type="native">
                 <Table withTableBorder withColumnBorders highlightOnHover >
                     <Table.Thead>
