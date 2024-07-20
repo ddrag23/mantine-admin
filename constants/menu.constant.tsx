@@ -11,16 +11,16 @@ export default [
         link: "/users",
         icon: <IconUser size="1rem" stroke={1.5} />
     },
-    {
-        name: "Area",
-        link: "",
-        icon: <IconMap size="1rem" stroke={1.5} />,
-        child: [
-            {
-                name: "Province",
-                link: "/area/province",
-            },
-        ]
-    },
+    // {
+    //     name: "Area",
+    //     link: "",
+    //     icon: <IconMap size="1rem" stroke={1.5} />,
+    //     child: [
+    //         {
+    //             name: "Province",
+    //             link: "/area/province",
+    //         },
+    //     ]
+    // },
 
 ]
