@@ -1,10 +1,9 @@
 "use client"
-import { ChangeEvent, Children, ReactNode, useCallback, useEffect, useState } from 'react';
-import { Table, Checkbox, TableData, Loader, Pagination, Flex, Box, Skeleton, Space, Group, ActionIcon, Input } from '@mantine/core';
-import { useDebouncedCallback, usePagination, useSet } from '@mantine/hooks';
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import { Table, Checkbox, Loader, Pagination, Flex, Space, Group, ActionIcon, CloseButton, Input } from '@mantine/core';
+import { useDebouncedCallback, useDebouncedState, } from '@mantine/hooks';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
-const elements = [] as any[];
-
+import { useDebounce } from '@uidotdev/usehooks';
 
 type DataTableProps = {
     fetchUrl?: string
@@ -50,11 +49,12 @@ export default function DataTable(props: DataTableProps): JSX.Element {
     const [totalCount, setTotalCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [selectedRows, setSelectedRows] = useState<number[]>([])
-    const [search, setSearch] = useState<string>()
+    const [search, setSearch] = useState<string>('')
+    const searchDebounce = useDebounce(search, 500)
     const fetchData = async () => {
         setLoading(true);
         try {
-            const fetching = await fetch(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&limit=${pageSize}${search ? `&search=${search}` : ''}`);
+            const fetching = await fetch(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&limit=${pageSize}${search ? `&search=${searchDebounce}` : ''}`);
             const response = await fetching.json()
             setData(response.data.data);
             setTotalCount(response.data.total);
@@ -64,15 +64,11 @@ export default function DataTable(props: DataTableProps): JSX.Element {
             setLoading(false);
         }
     }
-    const handleSearch = useDebouncedCallback(async (query: string) => {
-        setLoading(true);
-        setSearch(query)
-        setLoading(false);
-    }, 500)
     function handleRefresh() {
         setLoading(true)
         setSearch('')
         setCurrentPage(1)
+        console.log(search)
         setLoading(false)
     }
     useEffect(() => {
@@ -84,11 +80,17 @@ export default function DataTable(props: DataTableProps): JSX.Element {
             setTotalCount(dataSource.length);
             setLoading(false);
         }
-    }, [fetchUrl, currentPage, pageSize, serverSide, search]);
+    }, [fetchUrl, currentPage, pageSize, serverSide, searchDebounce]);
     return (
         <>
             <Group justify='space-between'>
-                <Input leftSection={<IconSearch />} placeholder="Search " onChange={(e: ChangeEvent<HTMLInputElement>) => handleSearch(e.target.value)} />
+                <Input leftSection={<IconSearch />} placeholder="Search " onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)} rightSectionPointerEvents="all" value={search} rightSection={
+                    <CloseButton
+                        aria-label="Clear input"
+                        onClick={() => setSearch('')}
+                        style={{ display: search ? undefined : 'none' }}
+                    />
+                } />
                 <Group gap={'xs'}>
                     {props.toolbarChildren && props.toolbarChildren}
                     <ActionIcon variant="outline" aria-label="Settings" onClick={handleRefresh}>
