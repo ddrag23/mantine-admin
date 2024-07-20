@@ -63,6 +63,14 @@ export default function DataTable(props: DataTableProps): JSX.Element {
             setLoading(false);
         }
     }
+
+    function handleSearch(e: ChangeEvent<HTMLInputElement>) {
+        if (currentPage != 1) {
+            setCurrentPage(1)
+        }
+        setSearch(e.target.value)
+    }
+
     function handleRefresh() {
         setLoading(true)
         setSearch('')
@@ -83,7 +91,7 @@ export default function DataTable(props: DataTableProps): JSX.Element {
     return (
         <>
             <Group justify='space-between'>
-                <Input leftSection={<IconSearch />} placeholder="Search " onChange={(e: ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)} rightSectionPointerEvents="all" value={search} rightSection={
+                <Input leftSection={<IconSearch />} placeholder="Search " onChange={handleSearch} rightSectionPointerEvents="all" value={search} rightSection={
                     <CloseButton
                         aria-label="Clear input"
                         onClick={() => setSearch('')}
