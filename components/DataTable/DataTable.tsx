@@ -3,6 +3,8 @@ import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
 import { Table, Checkbox, Loader, Pagination, Flex, Space, Group, ActionIcon, CloseButton, Input } from '@mantine/core';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { useDebounce } from '@uidotdev/usehooks';
+import Image from 'next/image';
+import emptyData from '../../public/assets/images/empty-data.jpg'
 
 type DataTableProps = {
     fetchUrl?: string
@@ -29,7 +31,9 @@ function LoadingTable({ length }: { length: number }) {
 
 function EmptyData({ length }: { length: number }) {
     return <Table.Tr>
-        <Table.Td colSpan={length} style={{ textAlign: 'center' }}>Data Not Found</Table.Td>
+        <Table.Td colSpan={length} style={{ textAlign: 'center' }}>
+            <Image src={emptyData} alt='Data not found' width={350} height={350} />
+        </Table.Td>
     </Table.Tr>
 }
 
@@ -53,7 +57,7 @@ export default function DataTable(props: DataTableProps): JSX.Element {
     const fetchData = async () => {
         setLoading(true);
         try {
-            const fetching = await fetch(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&limit=${pageSize}${search ? `&search=${searchDebounce}` : ''}`);
+            const fetching = await fetch(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&take=${pageSize}${search ? `&search=${searchDebounce}` : ''}`);
             const response = await fetching.json()
             setData(response.data.data);
             setTotalCount(response.data.total);
