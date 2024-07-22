@@ -4,7 +4,7 @@ import { Table, Checkbox, Loader, Pagination, Flex, Space, Group, ActionIcon, Cl
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { useDebounce } from '@uidotdev/usehooks';
 import Image from 'next/image';
-import emptyData from '../../public/assets/images/empty-data.jpg'
+import emptyData from '../../../public/assets/images/empty-data.jpg'
 
 type DataTableProps = {
     fetchUrl?: string
