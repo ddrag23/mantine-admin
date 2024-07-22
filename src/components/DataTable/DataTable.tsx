@@ -8,7 +8,6 @@ import emptyData from '../../../public/assets/images/empty-data.jpg'
 
 type DataTableProps = {
     fetchUrl?: string
-    dataSource?: any[]
     columns: ColumnProps[]
     pageSize: number
     key: string
@@ -46,7 +45,7 @@ function urlCondition(url: string) {
 }
 
 export default function DataTable(props: DataTableProps): JSX.Element {
-    const { fetchUrl, dataSource = [], columns, pageSize, serverSide = false } = props
+    const { fetchUrl, columns, pageSize, serverSide = false } = props
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalCount, setTotalCount] = useState(0);
@@ -86,10 +85,6 @@ export default function DataTable(props: DataTableProps): JSX.Element {
         if (serverSide && fetchUrl) {
             // fetchData();
             fetchData();
-        } else {
-            setData(dataSource.slice((currentPage - 1) * pageSize, currentPage * pageSize));
-            setTotalCount(dataSource.length);
-            setLoading(false);
         }
     }, [fetchUrl, currentPage, pageSize, serverSide, searchDebounce]);
     return (

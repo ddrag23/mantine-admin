@@ -1,6 +1,5 @@
 import { IconDashboard, IconMap, IconUser } from "@tabler/icons-react";
-
-export default [
+const menus = [
     {
         name: "Dashboard",
         link: "/",
@@ -24,3 +23,4 @@ export default [
     // },
 
 ]
+export default menus 

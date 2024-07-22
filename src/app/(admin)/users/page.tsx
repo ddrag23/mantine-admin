@@ -2,16 +2,16 @@
 import { ActionIcon } from "@mantine/core";
 import { IconDotsVertical, IconRefresh } from "@tabler/icons-react";
 import DataTable, { ColumnProps } from "../../../components/DataTable/DataTable";
-import useDateFormat from "../../../hooks/useDateFormat";
 import CardSection from "../../../components/CardSection";
+import FormatDate from "../../../components/FormatDate";
+
 export default function Page() {
     const columns: ColumnProps[] = [
         { dataField: 'name', caption: 'NAME' },
         { dataField: 'email', caption: 'EMAIL' },
         {
             dataField: 'created_at', caption: 'CREATED AT', renderCell: (data) => {
-                const dateFormat = useDateFormat(data.created_at)
-                return <>{dateFormat}</>
+                return <FormatDate date={data.created_at} />
             }
         },
         {
