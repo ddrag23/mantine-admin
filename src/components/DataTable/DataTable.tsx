@@ -1,5 +1,5 @@
 "use client"
-import { ChangeEvent, ReactNode, useEffect, useState } from 'react';
+import { ChangeEvent, forwardRef, ReactNode, useEffect, useImperativeHandle, useState } from 'react';
 import { Table, Checkbox, Loader, Pagination, Flex, Space, Group, ActionIcon, CloseButton, Input } from '@mantine/core';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -21,6 +21,10 @@ export type ColumnProps = {
     caption: string
     renderCell?: (data: any) => React.ReactNode
 }
+
+export type DataTableHandle = {
+    handleRefresh: () => void;
+};
 
 function LoadingTable({ length }: { length: number }) {
     return <Table.Tr>
@@ -44,7 +48,7 @@ function urlCondition(url: string) {
     return condition
 }
 
-export default function DataTable(props: DataTableProps): JSX.Element {
+export default forwardRef<DataTableHandle, DataTableProps>((props, ref): JSX.Element => {
     const { fetchUrl, columns, pageSize, serverSide = false } = props
     const [data, setData] = useState<any[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,13 +78,18 @@ export default function DataTable(props: DataTableProps): JSX.Element {
         setSearch(e.target.value)
     }
 
-    function handleRefresh() {
+    async function handleRefresh() {
         setLoading(true)
         setSearch('')
+        if (currentPage == 1) {
+            await fetchData()
+        }
         setCurrentPage(1)
-        console.log(search)
         setLoading(false)
     }
+    useImperativeHandle(ref, () => ({
+        handleRefresh
+    }));
     useEffect(() => {
         if (serverSide && fetchUrl) {
             // fetchData();
@@ -136,4 +145,4 @@ export default function DataTable(props: DataTableProps): JSX.Element {
             </Flex>
         </>
     );
-}
+})
