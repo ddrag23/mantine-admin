@@ -4,8 +4,12 @@ import { IconDotsVertical, IconRefresh } from "@tabler/icons-react";
 import DataTable, { ColumnProps } from "../../../components/DataTable/DataTable";
 import CardSection from "../../../components/CardSection";
 import FormatDate from "../../../components/FormatDate";
+import ActionButton from "../../../components/ActionButton";
 
 export default function Page() {
+    function edit(id: number) {
+        console.log(id)
+    }
     const columns: ColumnProps[] = [
         { dataField: 'name', caption: 'NAME' },
         { dataField: 'email', caption: 'EMAIL' },
@@ -15,9 +19,7 @@ export default function Page() {
             }
         },
         {
-            dataField: 'id', caption: 'ACTION', renderCell: (data) => (<ActionIcon variant="outline" aria-label="Settings">
-                <IconDotsVertical style={{ width: '70%', height: '70%' }} stroke={1.5} />
-            </ActionIcon>)
+            dataField: 'id', caption: 'ACTION', style: { textAlign: 'center' }, renderCell: (data) => (<ActionButton data={data} onEdit={edit}></ActionButton>)
         },
     ];
     return <>

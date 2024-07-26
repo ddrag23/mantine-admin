@@ -1,5 +1,5 @@
 "use client"
-import { ChangeEvent, forwardRef, ReactNode, useEffect, useImperativeHandle, useState } from 'react';
+import { ChangeEvent, CSSProperties, forwardRef, ReactNode, useEffect, useImperativeHandle, useState } from 'react';
 import { Table, Checkbox, Loader, Pagination, Flex, Space, Group, ActionIcon, CloseButton, Input } from '@mantine/core';
 import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { useDebounce } from '@uidotdev/usehooks';
@@ -20,7 +20,8 @@ type DataTableProps = {
 export type ColumnProps = {
     dataField: string
     caption: string
-    renderCell?: (data: any) => React.ReactNode
+    renderCell?: (data: any) => React.ReactNode,
+    style?: CSSProperties
 }
 
 export type DataTableHandle = {
@@ -130,7 +131,7 @@ export default forwardRef<DataTableHandle, DataTableProps>((props, ref): JSX.Ele
                         {!loading && data.length > 0 && data.map((item, rowIndex) => (
                             <Table.Tr key={rowIndex}>
                                 {columns.map((column, colIndex) => (
-                                    <Table.Td key={colIndex}>
+                                    <Table.Td key={colIndex} style={column.style}>
                                         {column.renderCell ? column.renderCell(item) : item[column.dataField]}
                                     </Table.Td>
                                 ))}
