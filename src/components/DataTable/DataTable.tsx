@@ -5,6 +5,7 @@ import { IconRefresh, IconSearch } from '@tabler/icons-react';
 import { useDebounce } from '@uidotdev/usehooks';
 import Image from 'next/image';
 import emptyData from '../../../public/assets/images/empty-data.jpg'
+import httpClient, { ResponseData } from '../../lib/http-client';
 
 type DataTableProps = {
     fetchUrl?: string
@@ -60,10 +61,9 @@ export default forwardRef<DataTableHandle, DataTableProps>((props, ref): JSX.Ele
     const fetchData = async () => {
         setLoading(true);
         try {
-            const fetching = await fetch(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&take=${pageSize}${search ? `&search=${searchDebounce}` : ''}`);
-            const response = await fetching.json()
-            setData(response.data.data);
-            setTotalCount(response.data.total);
+            const { data } = await httpClient.get<ResponseData>(`${fetchUrl}${urlCondition(fetchUrl!)}page=${currentPage}&take=${pageSize}${search ? `&search=${searchDebounce}` : ''}`);
+            setData(data.data);
+            setTotalCount(data.total);
         } catch (error) {
             console.error('Error fetching data:', error);
         } finally {

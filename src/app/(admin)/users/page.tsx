@@ -22,7 +22,7 @@ export default function Page() {
     ];
     return <>
         <CardSection title="User List">
-            <DataTable fetchUrl={`${process.env.NEXT_PUBLIC_API_URL}/settings/users`} pageSize={10} key="id" serverSide={true} columns={columns} />
+            <DataTable fetchUrl={`/settings/users`} pageSize={10} key="id" serverSide={true} columns={columns} />
         </CardSection>
     </>
 }
