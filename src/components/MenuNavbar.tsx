@@ -1,14 +1,33 @@
-import { Menu, Button, Text, rem, Avatar } from '@mantine/core';
+import { Menu, rem, Avatar } from '@mantine/core';
+import { notifications } from '@mantine/notifications';
 import {
     IconSettings,
-    IconSearch,
-    IconPhoto,
     IconMessageCircle,
-    IconTrash,
-    IconArrowsLeftRight,
+    IconLogout,
 } from '@tabler/icons-react';
+import httpClient, { ResponseData } from '../lib/http-client';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export default function ProfileNavbar() {
+    const router = useRouter()
+    async function signOut() {
+        try {
+            const response = await httpClient.post<ResponseData>('/auth/logout', {});
+            ['token', 'user', 'permissions'].forEach(item => {
+                Cookies.remove(item)
+            });
+            notifications.show({ title: "Success", message: response.message, color: 'green' })
+            router.push('/login')
+        } catch (error) {
+            let message = "something when wrong";
+            if ((error as any).data) {
+                message = (error as any).data.message
+            }
+            notifications.show({ title: "Error!", message, color: 'red' })
+
+        }
+    }
     return (
         <Menu shadow="md" width={200}>
             <Menu.Target>
@@ -21,35 +40,18 @@ export default function ProfileNavbar() {
                     Settings
                 </Menu.Item>
                 <Menu.Item leftSection={<IconMessageCircle style={{ width: rem(14), height: rem(14) }} />}>
-                    Messages
-                </Menu.Item>
-                <Menu.Item leftSection={<IconPhoto style={{ width: rem(14), height: rem(14) }} />}>
-                    Gallery
-                </Menu.Item>
-                <Menu.Item
-                    leftSection={<IconSearch style={{ width: rem(14), height: rem(14) }} />}
-                    rightSection={
-                        <Text size="xs" c="dimmed">
-                            ⌘K
-                        </Text>
-                    }
-                >
-                    Search
+                    Profile
                 </Menu.Item>
 
                 <Menu.Divider />
 
                 <Menu.Label>Danger zone</Menu.Label>
                 <Menu.Item
-                    leftSection={<IconArrowsLeftRight style={{ width: rem(14), height: rem(14) }} />}
-                >
-                    Transfer my data
-                </Menu.Item>
-                <Menu.Item
                     color="red"
-                    leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
+                    onClick={signOut}
+                    leftSection={<IconLogout style={{ width: rem(14), height: rem(14) }} />}
                 >
-                    Delete my account
+                    Sign Out
                 </Menu.Item>
             </Menu.Dropdown>
         </Menu>
