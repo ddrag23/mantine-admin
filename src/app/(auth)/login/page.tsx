@@ -27,7 +27,9 @@ export default function Page() {
         setLoading(true)
         try {
             const response = await httpClient.post<ResponseData>('/auth/login', values)
-            Cookies.set('token', response.data.token)
+            Cookies.set('token', response.data.token, { expires: 365 })
+            Cookies.set('user', JSON.stringify(response.data.user), { expires: 365 })
+            Cookies.set('permissions', JSON.stringify(response.data.permissions), { expires: 365 })
             notifications.show({ title: "Success", message: response.message, color: 'green' })
             router.push('/')
         } catch (error) {
